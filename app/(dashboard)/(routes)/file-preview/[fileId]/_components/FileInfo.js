@@ -8,6 +8,7 @@ function FileInfo({ file }) {
     file && setFileType(file?.fileType.split("/")[0]);
     console.log(fileType);
   }, [file]);
+
   return (
     file && (
       <div className="text-center border flex justify-center m-4 flex-col items-center p-2 rounded-md border-blue-200">

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalApi from "../../../../../_utils/GlobalApi";
 import { useAuth, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 function FileShareForm({ file, onPasswordSave }) {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
@@ -11,6 +12,8 @@ function FileShareForm({ file, onPasswordSave }) {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [isClicked, setIsClicked] = useState(false);
+
   const { user } = useUser();
 
   const handleInputChange = (event) => {
@@ -23,6 +26,7 @@ function FileShareForm({ file, onPasswordSave }) {
   };
 
   const sendEmail = () => {
+    setIsClicked(true);
     const data = {
       emailToSend: email,
       userName: user?.fullName,
@@ -34,6 +38,10 @@ function FileShareForm({ file, onPasswordSave }) {
     GlobalApi.SendEmail(data).then((resp) => {
       console.log(resp);
     });
+    toast.success("Email Sent");
+    setTimeout(() => {
+      window.location.href = "/files"; // Programmatically navigate to /files
+    }, 2000);
   };
 
   const onCopyClick = () => {
@@ -107,12 +115,15 @@ function FileShareForm({ file, onPasswordSave }) {
                 onChange={handleInputChange}
               />
             </div>
-            <button
-              className="p-2 bg-primary text-white rounded-md disabled:bg-gray-300 hover:bg-blue-600"
-              onClick={() => sendEmail()}
-            >
-              Send Email
-            </button>
+            <Link href="/files">
+              <button
+                className="p-2 bg-primary text-white rounded-md disabled:bg-gray-300 hover:bg-blue-600"
+                onClick={() => sendEmail()}
+                disabled={isClicked}
+              >
+                Send Email
+              </button>
+            </Link>
           </div>
         </div>
         <ToastContainer autoClose={1600} />
