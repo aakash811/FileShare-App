@@ -18,7 +18,6 @@ function FileShareForm({ file, onPasswordSave }) {
 
   const handleInputChange = (event) => {
     setEmail(event.target.value);
-    console.log(email);
   };
 
   const passProtection = () => {
@@ -28,7 +27,7 @@ function FileShareForm({ file, onPasswordSave }) {
   const sendEmail = () => {
     setIsClicked(true);
     const data = {
-      emailToSend: email,
+      to: email,
       userName: user?.fullName,
       fileName: file.fileName,
       fileSize: file.fileSize,

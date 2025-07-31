@@ -1,26 +1,35 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../../firebaseConfig"; // Adjust the path to your Firebase configuration
+import { useUser } from "@clerk/nextjs";
 
 function Files() {
+  const { user, isLoaded } = useUser();
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const filesCollection = collection(db, "uploadedFile");
-        const fileSnapshot = await getDocs(filesCollection);
-        const fileList = fileSnapshot.docs.map((doc) => doc.data());
+        if (!user || !user.primaryEmailAddress) return;
+
+        const userEmail = user.primaryEmailAddress.emailAddress;
+        const fileRef = collection(db, "uploadedFile");
+        const q = query(fileRef, where("userEmail", "==", userEmail))
+        // const filesCollection = collection(db, "uploadedFile");
+        const querySnapshot = await getDocs(q);
+        const fileList = querySnapshot.docs.map((doc) => doc.data());
         setFiles(fileList);
       } catch (error) {
         console.error("Error fetching files: ", error);
       }
     };
 
-    fetchFiles();
-  }, []);
+    if(isLoaded){ 
+      fetchFiles();
+    }
+  }, [user, isLoaded]);
 
   return (
     <div className="mt-24">

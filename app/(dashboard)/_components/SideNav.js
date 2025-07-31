@@ -35,7 +35,7 @@ function Sidenav({ closeSidebar }) {
 
       <div className="flex flex-col w-full">
         {menuList.map((item, index) => (
-          <Link href={item.path}>
+          <Link key={item.id} href={item.path}>
             <button
               className={`flex gap-2 p-4 px-6 hover:bg-gray-100 w-full text-gray-500 ${
                 activeIndex === index ? "bg-blue-50 text-primary" : null

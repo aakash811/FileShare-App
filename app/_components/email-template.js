@@ -42,7 +42,7 @@ export const EmailTemplate = ({ responce }) => (
                   textAlign: "center",
                 }}
               >
-                Hi {responce.emailToSend.split("@")[0]},
+              Hi {responce?.to?.split?.("@")[0] || "User"},
               </Heading>
               <Heading
                 as="h2"
